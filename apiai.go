@@ -741,3 +741,56 @@ func (client *DialogFlowClient) GetSessionID() string {
 func (client *DialogFlowClient) SetSessionID(sessionID string) {
 	client.sessionID = sessionID
 }
+
+// NOT IN ORIGINAL PACKAGE
+// Adds new active contexts to the specified session
+func (client *DialogFlowClient) ContextsCreateRequestWithSession(contexts []Context, sessionID string) (QueryResponse, error) {
+	var response QueryResponse
+
+	if reflect.DeepEqual(contexts, []Context{}) {
+		return response, errors.New("contexts cannot be empty")
+	}
+
+	request := NewRequest(
+		client,
+		RequestOptions{
+			URI:    client.GetBaseUrl() + "contexts?sessionId=" + sessionID,
+			Method: "POST",
+			Body:   contexts,
+		},
+	)
+
+	data, err := request.Perform()
+	if err != nil {
+		return response, err
+	}
+
+	err = json.Unmarshal(data, &response)
+	return response, err
+}
+
+// Deletes the specified context from the specified session
+func (client *DialogFlowClient) ContextsDeleteByNameRequestWithSession(name string, sessionID string) (QueryResponse, error) {
+	var response QueryResponse
+
+	if name == "" {
+		return response, errors.New("name cannot be empty")
+	}
+
+	request := NewRequest(
+		client,
+		RequestOptions{
+			URI:    client.GetBaseUrl() + "contexts/" + name + "?sessionId=" + sessionID,
+			Method: "DELETE",
+			Body:   nil,
+		},
+	)
+
+	data, err := request.Perform()
+	if err != nil {
+		return response, err
+	}
+
+	err = json.Unmarshal(data, &response)
+	return response, err
+}
