@@ -794,3 +794,25 @@ func (client *DialogFlowClient) ContextsDeleteByNameRequestWithSession(name stri
 	err = json.Unmarshal(data, &response)
 	return response, err
 }
+
+// Deletes all contexts from the specified session
+func (client *DialogFlowClient) ContextsDeleteRequestWithSession(sessionID string) (QueryResponse, error) {
+	var response QueryResponse
+
+	request := NewRequest(
+		client,
+		RequestOptions{
+			URI:    client.GetBaseUrl() + "contexts?sessionId=" + sessionID,
+			Method: "DELETE",
+			Body:   nil,
+		},
+	)
+
+	data, err := request.Perform()
+	if err != nil {
+		return response, err
+	}
+
+	err = json.Unmarshal(data, &response)
+	return response, err
+}
