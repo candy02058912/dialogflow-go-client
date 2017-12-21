@@ -816,3 +816,25 @@ func (client *DialogFlowClient) ContextsDeleteRequestWithSession(sessionID strin
 	err = json.Unmarshal(data, &response)
 	return response, err
 }
+
+// retrieves the list of all currently active contexts for the specified session
+func (client *DialogFlowClient) ContextsFindAllRequestWithSession(sessionID string) ([]Context, error) {
+	var response []Context
+
+	request := NewRequest(
+		client,
+		RequestOptions{
+			URI:    client.GetBaseUrl() + "contexts?sessionId=" + sessionID,
+			Method: "GET",
+			Body:   nil,
+		},
+	)
+
+	data, err := request.Perform()
+	if err != nil {
+		return response, err
+	}
+
+	err = json.Unmarshal(data, &response)
+	return response, err
+}
